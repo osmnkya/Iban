@@ -4,7 +4,7 @@ Instructions:
 
 Run Main() method from IbanCheckApiApplication.java class;
 
-IBAN validation, go to localhost:8080/[put your IBAN here];
+IBAN validation, go to localhost:8080/iban/[put your IBAN here];
 
 Result:
 true iban is correct if false iban is uncorrect.

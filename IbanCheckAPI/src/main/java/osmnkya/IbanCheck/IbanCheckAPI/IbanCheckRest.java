@@ -8,7 +8,7 @@ import java.util.List;
 @RestController
 public class IbanCheckRest {
 
-    @RequestMapping(value = "/{iban}", method = RequestMethod.GET)
+    @RequestMapping(value = "/iban/{iban}", method = RequestMethod.GET)
     public boolean checkIban(@PathVariable("iban") String iban) {
         IbanControl ibanHandler = new IbanControl();
         return ibanHandler.isIbanValid(iban);

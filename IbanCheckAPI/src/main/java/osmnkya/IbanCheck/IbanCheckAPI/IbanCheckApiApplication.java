@@ -16,7 +16,7 @@ public class IbanCheckApiApplication {
 	public class HelloController {
 		@RequestMapping("/")
 		public String index() {
-			return "Hej! Please put the iban on url after /";
+			return "Hej! Please put the iban localhost:8080/iban/{here}";
 		}
 	}
 }
