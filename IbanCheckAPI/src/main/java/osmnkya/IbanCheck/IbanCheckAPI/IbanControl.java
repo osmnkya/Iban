@@ -1,7 +1,7 @@
 package osmnkya.IbanCheck.IbanCheckAPI;
 
-import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class IbanControl {
 
@@ -20,6 +20,10 @@ public class IbanControl {
             return false;
         }
         
+        if(!validateIbanNumber(iban)) {
+        	return false;
+        }
+        
         int ibanLength = iban.length();
         
         String countryCode = iban.substring(0, 2);
@@ -36,12 +40,24 @@ public class IbanControl {
         }
     }
 
-
     private int getIbanLengthByCountry(String countryCode) {
 
         return countryCodes.getOrDefault(countryCode, -1);
     }
-
+    
+    public static boolean validateIbanNumber(String iban) {
+        Boolean res = true;
+        String ibanRegex = "^([A-Z]{2}[ "+"\\"+"-]?[0-9]{2})(?=(?:[ "+"\\"+"-]?[A-Z0-9]){9,30}$)((?:[ "+"\\"+"-]?[A-Z0-9]{3,5}){2,7})([ "+"\\"+"-]?[A-Z0-9]{1,3})?$"; 
+        Pattern MyPattern = Pattern.compile(ibanRegex);
+        if(iban!=null){
+            java.util.regex.Matcher MyMatcher = MyPattern.matcher(iban);
+            if (!MyMatcher.matches()) 
+            {
+                res = false;
+            }
+        } 
+        return res; 
+    }
 
     private void initCountyCodeLengths() {
 
