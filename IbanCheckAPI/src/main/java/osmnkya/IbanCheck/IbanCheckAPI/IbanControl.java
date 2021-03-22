@@ -3,12 +3,12 @@ package osmnkya.IbanCheck.IbanCheckAPI;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-public class IbanHandler {
+public class IbanControl {
 
 	private HashMap<String, Integer> countryCodes = new HashMap<>();
 
 
-    IbanHandler() {
+    IbanControl() {
 
         initCountyCodeLengths();
     }
@@ -16,22 +16,21 @@ public class IbanHandler {
 
     boolean isIbanValid(String iban) {
 
-        // IBAN can't be shorter than 14 and longer than 34 symbols
         if (iban.length() < 14 || iban.length() > 34) {
             return false;
         }
+        
+        int ibanLength = iban.length();
+        
+        String countryCode = iban.substring(0, 2);
 
-        int ibanLength = getIbanLengthByCountry(iban.substring(0, 2));
+        int countryIbanLength = getIbanLengthByCountry(countryCode);
 
-        // Country code (first 2 symbols) are correct
-        if (ibanLength != -1) {
-            String firstIbanNumbers = getFirstIbanNumbers(iban);    // 1. Take COUNTRY CODE symbols and CHECK digits of IBAN and convert to numeric values;
-            String ibanNumeric = getIbanConvertedToNumbers(iban);   // 2. Convert other IBAN symbols to numeric values;
-            ibanNumeric += firstIbanNumbers;                        // 3. Append numeric values of COUNTRY CODE symbols and CHECK digits of IBAN to the end;
-            return isIbanDividable(ibanNumeric);                    // 4. Check if IBAN is valid.
+        // IbanLengths are correct
+        if (ibanLength == countryIbanLength) {
+        	return true;
         }
 
-        // Country code (first 2 symbols) are incorrect
         else {
             return false;
         }
@@ -43,51 +42,6 @@ public class IbanHandler {
         return countryCodes.getOrDefault(countryCode, -1);
     }
 
-    private boolean isIbanDividable(String ibanNumericString) {
-
-        // IBAN is validated by checking if the remainder of numeric values divided by 97 equals 1
-
-        BigInteger ibanValueBigInteger = new BigInteger(ibanNumericString);
-        BigInteger divider = new BigInteger("97");
-        BigInteger remainder = new BigInteger("1");
-
-        return ibanValueBigInteger.mod(divider).equals(remainder);
-    }
-
-    private String getFirstIbanNumbers(String iban) {
-
-        StringBuilder firstValues = new StringBuilder();
-
-        // Country code symbols
-        for (int i = 0; i <= 1; i++)
-            firstValues.append(Character.getNumericValue(iban.charAt(i)));
-
-        // Check digits
-        for(int j = 2; j <= 3; j++)
-            firstValues.append(iban.charAt(j));
-
-        return firstValues.toString();
-    }
-
-    private String getIbanConvertedToNumbers(String iban) {
-
-        StringBuilder ibanValue = new StringBuilder();
-
-        for (int i = 4; i < iban.length(); i++) {
-            if (IsUppercaseAsciiLetter(iban.charAt(i)))
-                ibanValue.append(Character.getNumericValue(iban.charAt(i)));
-            else
-                ibanValue.append(iban.charAt(i));
-        }
-
-        return ibanValue.toString();
-    }
-
-
-    private boolean IsUppercaseAsciiLetter(char c) {
-
-        return (c >= 'A' && c <= 'Z');
-    }
 
     private void initCountyCodeLengths() {
 
@@ -171,6 +125,5 @@ public class IbanHandler {
         countryCodes.put("VA", 22);
         countryCodes.put("VG", 24);
         countryCodes.put("XK", 20);
-
     }
 }

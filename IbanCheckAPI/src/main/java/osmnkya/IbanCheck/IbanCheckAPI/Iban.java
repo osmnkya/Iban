@@ -1,7 +1,8 @@
 package osmnkya.IbanCheck.IbanCheckAPI;
 
 public class Iban {
-    private String iban;
+
+    public String iban;
 
     String getIban() {
 

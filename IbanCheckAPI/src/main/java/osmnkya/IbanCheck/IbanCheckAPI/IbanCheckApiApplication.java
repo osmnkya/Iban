@@ -14,10 +14,9 @@ public class IbanCheckApiApplication {
 	
 	@RestController
 	public class HelloController {
-
 		@RequestMapping("/")
 		public String index() {
-			return "Greetings from Spring Boot!";
+			return "Hej! Please put the iban on url after /";
 		}
 	}
 }
